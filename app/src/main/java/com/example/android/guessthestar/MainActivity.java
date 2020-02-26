@@ -7,8 +7,10 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,7 +36,10 @@ public class MainActivity extends AppCompatActivity {
     private String url = "http://www.posh24.se/kandisar";
     private ArrayList<String> urlsImage;
     private ArrayList<String> names;
+    private ArrayList<Button> buttons;
 
+    private int numberOfQuestion;
+    private int numberOfRightAnswer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +49,18 @@ public class MainActivity extends AppCompatActivity {
         button1 = findViewById(R.id.button1);
         button2 = findViewById(R.id.button2);
         button3 = findViewById(R.id.button3);
+        buttons = new ArrayList<>();
+        buttons.add(button0);
+        buttons.add(button1);
+        buttons.add(button2);
+        buttons.add(button3);
         imageViewStar = findViewById(R.id.imageViewStar);
 
         urlsImage = new ArrayList<>();
         names = new ArrayList<>();
 
         getContent();
+        playGame();
     }
 
     //метод получает контент
@@ -95,7 +106,52 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void playGame(){
-        
+        //генерируем вопрос
+        generatedQuestion();
+        //получаем картинку и устанвливаем в imageViewStar
+        DownloadImageTask task = new DownloadImageTask();
+        try {
+            Bitmap bitmap = task.execute(urlsImage.get(numberOfQuestion)).get();
+            if(bitmap != null){
+                imageViewStar.setImageBitmap(bitmap);
+                for(int i =0; i< buttons.size(); i++){
+                    if(i == numberOfRightAnswer){
+                            buttons.get(i).setText(names.get(numberOfQuestion));
+                    } else {
+                        int wrongAnswer = generateWrongAnswer();
+                        buttons.get(i).setText(names.get(wrongAnswer));
+                    }
+                }
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void generatedQuestion(){
+        //получаем номер вопроса
+        numberOfQuestion = (int) (Math.random() * names.size());
+        //получаем правильный вариант
+        numberOfRightAnswer = (int) (Math.random() * buttons.size());
+    }
+
+    private int generateWrongAnswer(){
+        return (int) (Math.random() * names.size());
+    }
+
+    public void onClickAnswer(View view) {
+        Button button = (Button) view;
+        String tag = button.getTag().toString();
+        if(Integer.parseInt(tag) == numberOfRightAnswer){
+            Toast.makeText(this, "Верно!", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(this, "Не верно, правильный ответ: " + names.get(numberOfQuestion), Toast.LENGTH_SHORT).show();
+        }
+        playGame();
     }
 
     //создаем 2 класса в отделые потоки для загрузки контента и изображений

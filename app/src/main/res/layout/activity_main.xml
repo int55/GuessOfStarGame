@@ -25,6 +25,7 @@
         android:layout_margin="8dp"
         android:tag="0"
         android:text="Button"
+        android:onClick="onClickAnswer"
         app:layout_constraintBottom_toTopOf="@+id/button1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -37,6 +38,7 @@
         android:layout_margin="8dp"
         android:tag="1"
         android:text="Button"
+        android:onClick="onClickAnswer"
         app:layout_constraintBottom_toTopOf="@+id/button2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -48,6 +50,7 @@
         android:layout_margin="8dp"
         android:tag="2"
         android:text="Button"
+        android:onClick="onClickAnswer"
         app:layout_constraintBottom_toTopOf="@+id/button3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -59,6 +62,7 @@
         android:layout_margin="8dp"
         android:tag="3"
         android:text="Button"
+        android:onClick="onClickAnswer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
